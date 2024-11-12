@@ -1,11 +1,10 @@
-public abstract class WorkEnviorment {
+import javax.swing.*;
+
+public abstract class WorkEnviorment extends JFrame  {
     protected String environmentName;
-
     public WorkEnviorment(String environmentName){
-
+        this.environmentName = environmentName;
     }
-    public void enterEnvironment(){
-
-    }
+    public abstract void enterEnvironment();
 }
 

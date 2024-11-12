@@ -5,6 +5,12 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class LoginApplication extends JFrame implements ActionListener{
+    private String username;
+    private String password;
+    private double TimelyFinancial;
+    private String duty;
+    private String name;
+
                                                 //create a visual interface
     private JLabel LoginSystem;
     private JLabel userLabel;
@@ -19,7 +25,49 @@ public class LoginApplication extends JFrame implements ActionListener{
     private JPanel panel4;
 
 
-                                                //create a new frame
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public double getTimelyFinancial() {
+        return TimelyFinancial;
+    }
+
+    public void setTimelyFinancial(double timelyFinancial) {
+        TimelyFinancial = timelyFinancial;
+    }
+
+    public String getDuty() {
+        return duty;
+    }
+
+    public void setDuty(String duty) {
+        this.duty = duty;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    //create a new frame
     public LoginApplication(String frameName){
         super(frameName);
         setSize(400,300);
@@ -52,11 +100,27 @@ public class LoginApplication extends JFrame implements ActionListener{
                 String passwordFromField = String.valueOf(passwordField.getPassword());
                 if(validateAccountFromDatabase(userFromField,passwordFromField)){
                     JOptionPane.showMessageDialog(null,"Welcome",null,JOptionPane.INFORMATION_MESSAGE);
+                    String duty = getDutyFromDatabase(userFromField,passwordFromField);
+                    switch (duty){
+                        case "EmployeeManager"  :
+
+                            break;
+                        case "WareHouseManager" :
+
+                            break;
+
+                        case "NormalEmployee"   :
+
+                            break;
+
+                        default:
+
+                            break;
+                    }
                 }else{
                     usernameField.setText("");
                     passwordField.setText("");
                     JOptionPane.showMessageDialog(null,"Error validating account:" ,null,JOptionPane.ERROR_MESSAGE);
-
                 }
 
             }
@@ -143,4 +207,34 @@ public class LoginApplication extends JFrame implements ActionListener{
             return false;
         }
     }
-}
+    private static String getDutyFromDatabase(String username,String password) {
+        String url = "jdbc:mysql://localhost:3306/stu"; // 数据库连接URL
+        String user = "root"; // 数据库用户名
+        String pass = "root"; // 数据库密码
+        String query = "SELECT * FROM employeedata WHERE username = ? AND password = ?";
+
+        try (Connection conn = DriverManager.getConnection(url, user, pass);
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                   String duty = rs.getString("duty");
+                   JOptionPane.showMessageDialog(null,"Have done!Your duty is : " + duty,null,JOptionPane.INFORMATION_MESSAGE);
+                   return duty;
+                } else {
+                    JOptionPane.showMessageDialog(null,"Error validating account:" ,null,JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null,"Error getting" ,null,JOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+
+    }
+
+
+    }
