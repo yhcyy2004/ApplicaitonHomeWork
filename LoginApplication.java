@@ -4,14 +4,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-public class LoginApplication extends JFrame implements ActionListener{
+public class LoginApplication extends JFrame implements ActionListener {
     private String username;
     private String password;
     private double TimelyFinancial;
     private String duty;
     private String name;
 
-                                                //create a visual interface
+    // 创建可视化界面
     private JLabel LoginSystem;
     private JLabel userLabel;
     private JLabel passwordLabel;
@@ -23,7 +23,6 @@ public class LoginApplication extends JFrame implements ActionListener{
     private JPanel panel2;
     private JPanel panel3;
     private JPanel panel4;
-
 
     public String getUsername() {
         return username;
@@ -67,93 +66,93 @@ public class LoginApplication extends JFrame implements ActionListener{
         this.name = name;
     }
 
-    //create a new frame
-    public LoginApplication(String frameName){
+    // 创建新窗口
+    public LoginApplication(String frameName) {
         super(frameName);
-        setSize(400,300);
+        setSize(400, 300);
         setLayout(new FlowLayout());
 
-        panel1=new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel2=new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel3=new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel4=new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel1 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel3 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panel4 = new JPanel(new FlowLayout(FlowLayout.CENTER));
 
         // 加载 LOGO.png 图片
         ImageIcon logoIcon = new ImageIcon("G:/JAVA/demo/src/main/ApplicationSystem/LOGO.jpg");
         JLabel logoLabel = new JLabel(logoIcon);
-
         this.add(logoLabel); // 将图片添加到 JFrame 的顶部
 
-
-                                                //initialize the field
-        LoginSystem=new JLabel("Login System");
-        Font customFont=new Font("Times New Roman",Font.BOLD,36);
+        // 初始化字段
+        LoginSystem = new JLabel("Login System");
+        Font customFont = new Font("Times New Roman", Font.BOLD, 36);
         LoginSystem.setFont(customFont);
 
-        loginButton=new JButton("Login");
+        loginButton = new JButton("Login");
         this.add(loginButton);
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 loginButton.setEnabled(true);
-                String userFromField=usernameField.getText();
+                String userFromField = usernameField.getText();
                 String passwordFromField = String.valueOf(passwordField.getPassword());
-                if(validateAccountFromDatabase(userFromField,passwordFromField)){
-                    JOptionPane.showMessageDialog(null,"Welcome",null,JOptionPane.INFORMATION_MESSAGE);
-                    String duty = getDutyFromDatabase(userFromField,passwordFromField);
-                    switch (duty){
-                        case "EmployeeManager"  :
+                if (validateAccountFromDatabase(userFromField, passwordFromField)) {
+                    JOptionPane.showMessageDialog(null, "Welcome", null, JOptionPane.INFORMATION_MESSAGE);
+                    String duty = getDutyFromDatabase(userFromField, passwordFromField);
 
+                    switch (duty) {
+                        case "EmployeeManager":
+                            // 跳转到 EmployeeManagement 类
+                            EmployeeManagement employeeManagement = new EmployeeManagement();
+                            employeeManagement.enterEnvironment();
+                            employeeManagement.setVisible(true);
+                            setVisible(false);
                             break;
-                        case "WareHouseManager" :
-
+                        case "WareHouseManager":
+                            // 跳转到 WarehouseManager 类
+                            // 这里添加相应的跳转逻辑
                             break;
-
-                        case "NormalEmployee"   :
-
+                        case "NormalEmployee":
+                            // 跳转到 NormalEmployee 类
+                            // 这里添加相应的跳转逻辑
                             break;
-
                         default:
-
                             break;
                     }
-                }else{
+                } else {
                     usernameField.setText("");
                     passwordField.setText("");
-                    JOptionPane.showMessageDialog(null,"Error validating account:" ,null,JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error validating account:", null, JOptionPane.ERROR_MESSAGE);
                 }
-
             }
         });
 
-        registerButton=new JButton("Register");
+        registerButton = new JButton("Register");
         this.add(registerButton);
         registerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RegisterAppication jumpWeb =new RegisterAppication(frameName);
+                RegisterAppication jumpWeb = new RegisterAppication(frameName);
                 jumpWeb.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 jumpWeb.setVisible(true);
                 jumpWeb.setLocationRelativeTo(null);
             }
         });
 
-        Font labelFont =new Font("Times New Roman",Font.PLAIN,14);
+        Font labelFont = new Font("Times New Roman", Font.PLAIN, 14);
 
-        userLabel=new JLabel("Username:");
+        userLabel = new JLabel("Username:");
         userLabel.setFont(labelFont);
         this.add(userLabel);
 
-        usernameField=new JTextField(20);
+        usernameField = new JTextField(20);
         this.add(usernameField);
 
-        passwordLabel=new JLabel("Password:");
+        passwordLabel = new JLabel("Password:");
         passwordLabel.setFont(labelFont);
         this.add(passwordLabel);
 
-        passwordField=new JPasswordField(20);
+        passwordField = new JPasswordField(20);
         this.add(passwordField);
-
 
         panel1.add(LoginSystem);
         panel2.add(userLabel);
@@ -168,11 +167,7 @@ public class LoginApplication extends JFrame implements ActionListener{
         add(panel3);
         add(panel4);
 
-
-
-
-
-        setVisible(true);//set up the visual
+        setVisible(true); // 设置可视化
         setLayout(new FlowLayout());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -186,6 +181,7 @@ public class LoginApplication extends JFrame implements ActionListener{
     public void actionPerformed(ActionEvent e) {
 
     }
+
     private static boolean validateAccountFromDatabase(String username, String password) {
         String url = "jdbc:mysql://localhost:3306/stu"; // 数据库连接URL
         String user = "root"; // 数据库用户名
@@ -199,15 +195,14 @@ public class LoginApplication extends JFrame implements ActionListener{
             pstmt.setString(2, password);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                return rs.next(); // If there is a result, the account is valid
-
-
+                return rs.next(); // 如果有结果，账户有效
             }
         } catch (SQLException e) {
             return false;
         }
     }
-    private static String getDutyFromDatabase(String username,String password) {
+
+    private static String getDutyFromDatabase(String username, String password) {
         String url = "jdbc:mysql://localhost:3306/stu"; // 数据库连接URL
         String user = "root"; // 数据库用户名
         String pass = "root"; // 数据库密码
@@ -221,20 +216,17 @@ public class LoginApplication extends JFrame implements ActionListener{
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                   String duty = rs.getString("duty");
-                   JOptionPane.showMessageDialog(null,"Have done!Your duty is : " + duty,null,JOptionPane.INFORMATION_MESSAGE);
-                   return duty;
+                    String duty = rs.getString("duty");
+                    JOptionPane.showMessageDialog(null, "Have done! Your duty is: " + duty, null, JOptionPane.INFORMATION_MESSAGE);
+                    return duty;
                 } else {
-                    JOptionPane.showMessageDialog(null,"Error validating account:" ,null,JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Error validating account:", null, JOptionPane.ERROR_MESSAGE);
                     return null;
                 }
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(null,"Error getting" ,null,JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error getting", null, JOptionPane.ERROR_MESSAGE);
             return null;
         }
-
     }
-
-
-    }
+}
